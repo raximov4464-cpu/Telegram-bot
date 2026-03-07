@@ -5,6 +5,11 @@ TOKEN = "8636791675:AAHBkW8IRYulCYz1JUmI17VnLIGOh4sRCRM"
 CHANNEL = "@raximovganisher"
 
 async def check(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    # Agar kanal nomidan yozilgan bo'lsa tekshirmaydi
+    if update.message.sender_chat:
+        return
+
     user_id = update.effective_user.id
     first_name = update.effective_user.first_name
 
