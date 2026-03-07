@@ -1,7 +1,9 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
-TOKEN = "8636791675:AAHBkW8IRYulCYz1JUmI17VnLIGOh4sRCRM"
+import os
+
+TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL = "@raximovganisher"
 
 async def check(update: Update, context: ContextTypes.DEFAULT_TYPE):
