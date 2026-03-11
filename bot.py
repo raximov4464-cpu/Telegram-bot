@@ -1,6 +1,8 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
+from flask import Flask
+import threading
 import os
 
 TOKEN = os.getenv("BOT_TOKEN")
@@ -28,8 +30,30 @@ async def check(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.delete()
 
-app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(MessageHandler(filters.TEXT, check))
+# -------- TELEGRAM BOT --------
+app_bot = ApplicationBuilder().token(TOKEN).build()
+app_bot.add_handler(MessageHandler(filters.TEXT, check))
 
-app.run_polling()
+
+# -------- WEB SERVER (Render uchun) --------
+web = Flask(__name__)
+
+@web.route("/")
+def home():
+    return "Bot ishlayapti"
+
+
+def run_bot():
+    app_bot.run_polling()
+
+
+if __name__ == "__main__":
+
+    # Botni alohida thread da ishga tushiramiz
+    t = threading.Thread(target=run_bot)
+    t.start()
+
+    # Render uchun port ochamiz
+    port = int(os.environ.get("PORT", 10000))
+    web.run(host="0.0.0.0", port=port)
